@@ -15,15 +15,19 @@ public class Server1 {
                 Scanner sc = new Scanner(s.getInputStream());
                 PrintWriter pw = new PrintWriter(s.getOutputStream());
         ) {
-            if (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                pw.println(line);
-                // TILOS!
-                // System.exit(0);
-                pw.flush();
+            int sum = 0;
+            while (sc.hasNextInt()) {
+                int in = sc.nextInt();
+                if (in == 0) {
+                    pw.println(sum);
+                    pw.flush();
+                    sum = 0;
+                } else {
+                    sum += in;
+                }
             }
 
-        } catch (Exception e) { /**/}
+        } catch (Exception e) { e.printStackTrace();}
 
         // ss.close();
     }
