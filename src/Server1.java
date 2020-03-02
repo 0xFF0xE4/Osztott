@@ -12,18 +12,26 @@ public class Server1 {
     /* 4. feladat innen: https://kitlei.web.elte.hu/segedanyagok/felev/2019-2020-tavasz/osztott/osztott-feladatok.html */
 
     public static void main(String[] args) throws IOException {
-        int count = 0;
+        int sum = 0;
         try (
                 ServerSocket ss = new ServerSocket(PORT);
         ) {
             while (true) {
                 Socket s = ss.accept();
+                System.out.println("New connection");
                 Scanner sc = new Scanner(s.getInputStream());
                 PrintWriter pw = new PrintWriter(s.getOutputStream());
 
-                pw.println("You are the client number " + ++count);
-                pw.flush();
-                s.close();
+                while (sc.hasNextInt()) {
+                    int increment = sc.nextInt();
+                    if (increment == 0) {
+                        s.close();
+                    } else {
+                        sum += increment;
+                        pw.println(sum);
+                        pw.flush();
+                    }
+                }
             }
         } catch (Exception e) { e.printStackTrace();}
     }
