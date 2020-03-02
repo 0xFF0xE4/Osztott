@@ -9,28 +9,17 @@ public class Client {
     private static final String HOST = "localhost";
 
     public static void main(String[] args) throws IOException {
-        File inputFile = new File("src/input.txt");
-        File outputFile = new File("src/output.txt");
         try (
                 Socket s = new Socket(HOST, PORT);
                 Scanner sc = new Scanner(s.getInputStream());
-                PrintWriter pw = new PrintWriter(s.getOutputStream());
-                Scanner fileReader = new Scanner(inputFile);
-                PrintWriter fileWriter = new PrintWriter(outputFile)
+                PrintWriter pw = new PrintWriter(s.getOutputStream())
         ) {
-            while (fileReader.hasNextInt()) {
-                int num = fileReader.nextInt();
-                if (num == 0) break;
-                pw.println(num);
-            }
-            pw.println(0);
+            pw.println("input.txt");
             pw.flush();
 
-            while(sc.hasNextInt()) {
-                int num = sc.nextInt();
-                fileWriter.println(num);
+            while(sc.hasNextLine()) {
+                System.out.println(sc.nextLine());
             }
-            fileWriter.flush();
 
         } catch (Exception e) { e.printStackTrace();}
     }
