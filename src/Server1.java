@@ -7,33 +7,26 @@ import java.util.Scanner;
 
 public class Server1 {
 
-    private static final int PORT = 10000;
-
-    /* 4. feladat innen: https://kitlei.web.elte.hu/segedanyagok/felev/2019-2020-tavasz/osztott/osztott-feladatok.html */
+    /* 7. feladat innen: https://kitlei.web.elte.hu/segedanyagok/felev/2019-2020-tavasz/osztott/osztott-feladatok.html */
 
     public static void main(String[] args) throws IOException {
-        int sum = 0;
-        try (
-                ServerSocket ss = new ServerSocket(PORT);
-        ) {
-            while (true) {
-                Socket s = ss.accept();
-                System.out.println("New connection");
-                Scanner sc = new Scanner(s.getInputStream());
-                PrintWriter pw = new PrintWriter(s.getOutputStream());
 
-                while (sc.hasNextInt()) {
-                    int increment = sc.nextInt();
-                    if (increment == 0) {
-                        s.close();
-                    } else {
-                        sum += increment;
-                        pw.println(sum);
-                        pw.flush();
-                    }
+        String filename = args.length > 0 ? "src/numbers.txt" : "src/ports.txt";
+        int port = args.length > 0 ? Integer.parseInt(args[0]) : 12345;
+        try (ServerSocket ss = new ServerSocket(port)) {
+            Socket s = ss.accept();
+            PrintWriter pw = new PrintWriter((s.getOutputStream()));
+            try (Scanner fileReader = new Scanner(new File(filename))) {
+                while (fileReader.hasNextInt()) {
+                    pw.println(fileReader.nextInt());
+                    pw.flush();
                 }
+                s.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) { e.printStackTrace();}
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
     }
-
 }

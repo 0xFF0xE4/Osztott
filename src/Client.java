@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Client {
-    private static final int PORT = 10000;
+    private static final int PORT = 12345;
     private static final String HOST = "localhost";
 
     public static void main(String[] args) throws IOException {
@@ -15,18 +15,21 @@ public class Client {
                 Scanner sc = new Scanner(s.getInputStream());
                 PrintWriter pw = new PrintWriter(s.getOutputStream())
         ) {
-            while(true) {
-                int number = new Random().nextInt(20);
-                pw.println(number);
-                pw.flush();
-                if (sc.hasNextInt()) {
-                    System.out.println(sc.nextInt());
-                    Thread.sleep(100);
-                } else {
-                    break;
+            PrintWriter fileWriter = new PrintWriter(new File("output.txt"));
+            int sum = 0;
+            while(sc.hasNextInt()) {
+                int port = sc.nextInt();
+                try (Socket s_inner = new Socket(HOST, port);
+                     Scanner sc_inner = new Scanner(s_inner.getInputStream());
+                 ) {
+                    while (sc_inner.hasNextInt()) {
+                        int increment = sc_inner.nextInt();
+                        sum += increment;
+                        fileWriter.println(sum);
+                        fileWriter.flush();
+                    }
                 }
             }
-
         } catch (Exception e) { e.printStackTrace();}
     }
 
