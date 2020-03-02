@@ -14,10 +14,7 @@ public class Client {
                 Scanner sc = new Scanner(s.getInputStream());
                 PrintWriter pw = new PrintWriter(s.getOutputStream())
         ) {
-            pw.println("input.txt");
-            pw.flush();
-
-            while(sc.hasNextLine()) {
+            if (sc.hasNextLine()) {
                 System.out.println(sc.nextLine());
             }
 

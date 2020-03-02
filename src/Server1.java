@@ -12,25 +12,20 @@ public class Server1 {
     /* 4. feladat innen: https://kitlei.web.elte.hu/segedanyagok/felev/2019-2020-tavasz/osztott/osztott-feladatok.html */
 
     public static void main(String[] args) throws IOException {
+        int count = 0;
         try (
                 ServerSocket ss = new ServerSocket(PORT);
+        ) {
+            while (true) {
                 Socket s = ss.accept();
                 Scanner sc = new Scanner(s.getInputStream());
                 PrintWriter pw = new PrintWriter(s.getOutputStream());
-        ) {
-            if (sc.hasNext()) {
-                String filename = "src/" + sc.next();
-                try (Scanner fileReader = new Scanner(new File(filename))) {
-                    while(fileReader.hasNextLine()) {
-                        pw.println(fileReader.nextLine());
-                    }
-                } catch (Exception er) { er.printStackTrace(); }
+
+                pw.println("You are the client number " + ++count);
+                pw.flush();
+                s.close();
             }
         } catch (Exception e) { e.printStackTrace();}
-    }
-
-    private static int transformInt(int n) {
-        return 2 * n + 1;
     }
 
 }
