@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Server1 {
 
-    /* 8. feladat innen: https://kitlei.web.elte.hu/segedanyagok/felev/2019-2020-tavasz/osztott/osztott-feladatok.html */
+    /* 8.a feladat innen: https://kitlei.web.elte.hu/segedanyagok/felev/2019-2020-tavasz/osztott/osztott-feladatok.html */
 
     public static void main(String[] args) throws IOException {
 
@@ -24,19 +24,29 @@ public class Server1 {
 
             System.out.println("Names: " + name_1 + " and " + name_2);
 
-            while(sc_1.hasNextLine()) {
-                String message = sc_1.nextLine();
-                pw_2.println(name_1 + ": " + message);
-                pw_2.flush();
+            String message;
+            while(true) {
+                if (sc_1.hasNextLine()) {
+                    message = sc_1.nextLine();
+                    pw_2.println(name_1 + ": " + message);
+                    pw_2.flush();
+                } else {
+                    sock_1 = ss.accept();
+                    sc_1 = new Scanner(sock_1.getInputStream());
+                    pw_1 = new PrintWriter(sock_1.getOutputStream());
+                    name_1 = sc_1.nextLine();
+                }
                 if (sc_2.hasNextLine()) {
                     message = sc_2.nextLine();
                     pw_1.println(name_2 + ": " + message);
                     pw_1.flush();
                 } else {
-                    break;
+                    sock_2 = ss.accept();
+                    sc_2 = new Scanner(sock_2.getInputStream());
+                    pw_2 = new PrintWriter(sock_2.getOutputStream());
+                    name_2 = sc_2.nextLine();
                 }
             }
-
         } catch (Exception err) {
             err.printStackTrace();
         }
